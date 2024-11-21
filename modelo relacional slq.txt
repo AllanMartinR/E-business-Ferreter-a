@@ -1,0 +1,73 @@
+-- Tabla Usuarios
+CREATE TABLE Usuarios (
+    UsuarioID INT PRIMARY KEY AUTO_INCREMENT,
+    Nombre VARCHAR(100) NOT NULL,
+    Rol VARCHAR(50),
+    Password VARCHAR(100) NOT NULL,
+    Direccion VARCHAR(255),
+    Telefono VARCHAR(15),
+    Email VARCHAR(100) UNIQUE
+);
+
+-- Tabla Productos
+CREATE TABLE Productos (
+    ProductoID INT PRIMARY KEY AUTO_INCREMENT,
+    Nombre VARCHAR(100) NOT NULL,
+    Descripcion TEXT,
+    Precio DECIMAL(10, 2) NOT NULL,
+    Stock INT NOT NULL
+);
+
+-- Tabla Opiniones
+CREATE TABLE Opiniones (
+    OpinionID INT PRIMARY KEY AUTO_INCREMENT,
+    UsuarioID INT NOT NULL,
+    ProductoID INT NOT NULL,
+    Fecha DATE NOT NULL,
+    Comentario TEXT,
+    Calificacion INT CHECK (Calificacion BETWEEN 1 AND 5),
+    FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID),
+    FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID)
+);
+
+-- Tabla Carrito
+CREATE TABLE Carrito (
+    CarritoID INT PRIMARY KEY AUTO_INCREMENT,
+    UsuarioID INT NOT NULL,
+    ProductoID INT NOT NULL,
+    Cantidad INT NOT NULL,
+    FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID),
+    FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID)
+);
+
+-- Tabla Pedidos
+CREATE TABLE Pedidos (
+    PedidoID INT PRIMARY KEY AUTO_INCREMENT,
+    UsuarioID INT NOT NULL,
+    Fecha DATE NOT NULL,
+    PrecioUnitario DECIMAL(10, 2) NOT NULL,
+    Estado VARCHAR(50),
+    Cantidad INT NOT NULL,
+    FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID)
+);
+
+-- Tabla Pagos
+CREATE TABLE Pagos (
+    PagoID INT PRIMARY KEY AUTO_INCREMENT,
+    PedidoID INT NOT NULL,
+    FechaPago DATE NOT NULL,
+    MetodoDePago VARCHAR(50),
+    Total DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (PedidoID) REFERENCES Pedidos(PedidoID)
+);
+
+-- Tabla Notificaciones
+CREATE TABLE Notificaciones (
+    NotificacionID INT PRIMARY KEY AUTO_INCREMENT,
+    PedidoID INT NOT NULL,
+    UsuarioID INT NOT NULL,
+    Fecha DATE NOT NULL,
+    Tipo VARCHAR(50),
+    FOREIGN KEY (PedidoID) REFERENCES Pedidos(PedidoID),
+    FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID)
+);
